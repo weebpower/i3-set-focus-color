@@ -19,7 +19,10 @@ new_accent_color=${1:-`cat`}
 old_accent_color=`awk '$1 ~ /^client.focused$/ { print $3 }' $i3file`
 
 # check if the color is in hex format: #ABCDEF
-echo "$new_accent_color" | grep -E -q '^#[A-Fa-f0-9]{6}$' || { echo "Incorrect input!"; usage; }
+echo "$new_accent_color" | grep -E -q '^#[A-Fa-f0-9]{6}$' || \
+  { echo "Incorrect input!"; usage; }
+echo "$old_accent_color" | grep -E -q '^#[A-Fa-f0-9]{6}$' || \
+  { echo "Incorrect client.focused background! in $i3file"; exit 2; }
 
 # Backup config file
 cp $i3file $i3file~
@@ -28,4 +31,4 @@ cp $i3file $i3file~
 sed -i "s/$old_accent_color/$new_accent_color/g" $i3file
 
 # Apply the color changes.
-i3-msg reload
+i3-msg -q reload
