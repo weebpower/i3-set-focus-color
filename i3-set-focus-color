@@ -1,0 +1,31 @@
+#!/bin/sh
+# i3-col: A program for changing the accent (focus) color in i3-wm.
+# Works in ash.
+
+i3file=~/.i3/config
+
+usage()
+{
+	echo "USAGE: $0 COLOR"
+	echo "       Or pass the color through standard input."
+	echo "Colors must be in hex format, such as #AABBCC"
+	exit 1
+}
+
+# Get new color from stdin if no argument was passed.
+new_accent_color=${1:-`cat`}
+
+# The old accent color is the color set as background for window titles.
+old_accent_color=`awk '$1 ~ /^client.focused$/ { print $3 }' $i3file`
+
+# check if the color is in hex format: #ABCDEF
+echo "$new_accent_color" | grep -E -q '^#[A-Fa-f0-9]{6}$' || { echo "Incorrect input!"; usage; }
+
+# Backup config file
+cp $i3file $i3file~
+
+# Replace the old color with the new color, for everywhere in the config file.
+sed -i "s/$old_accent_color/$new_accent_color/g" $i3file
+
+# Apply the color changes.
+i3-msg reload
