@@ -1,0 +1,23 @@
+#!/bin/sh
+i3file=~/.i3/config
+cp $i3file $i3file~
+
+usage()
+{
+	echo "USAGE: $0 IMAGE"
+	exit 1
+}
+
+if [ -f "$1" ]
+then
+	image="$1"
+else
+	usage
+fi
+
+old_accent_color=`awk '$1 ~ /^client.focused$/ { print $2 }' $i3file`
+new_accent_color=`vibrant.py $image`
+
+feh --bg-fill "$1"
+sed -i "s/$old_accent_color/$new_accent_color/g" .i3/config
+i3-msg reload
