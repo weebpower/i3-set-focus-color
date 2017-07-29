@@ -8,7 +8,8 @@ usage()
 {
 	echo "USAGE: $0 COLOR"
 	echo "       Or pass the color through standard input."
-	echo "Colors must be in hex format, such as #AABBCC"
+	echo "Colors must be in hex format, such as #AABBCC."
+	echo "Don't forget to escape the # character in a shell environment."
 	exit 1
 }
 
